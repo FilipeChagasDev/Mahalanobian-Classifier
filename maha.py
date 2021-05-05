@@ -104,13 +104,15 @@ def separate_classes(x: np.ndarray, y: np.ndarray) -> List[Tuple[int, np.ndarray
     return l
 
 class MahalanobianClassifier():
-    def __init__(self, max_clusters_per_class: int = None, limit: float = 2):
+    def __init__(self, max_clusters_per_class: int = None, limit: float = 2, verbose: bool = False):
         """
         Args:
             max_clusters_per_class (int, optional): Maximum cluster number in each class. Defaults to None.
             limit (float, optional): Limit distance so the samples are not classified as None. It can be set to float('inf') if the None classification is not desirable. Defaults to 2.
+            verbose (bool, optional): Set as True to view text messages. Defaults to False.
         """
         self.limit = limit
+        self.verbose = verbose
         self.classes_kmeans = dict()
         self.clusters_params = dict()
 
@@ -125,7 +127,7 @@ class MahalanobianClassifier():
             MahalanobianClassifier: The classifier itself.
         """
         for clss, samples in separate_classes(x,y):
-            kminstance = kmeans_elbow(samples, verbose=True)
+            kminstance = kmeans_elbow(samples, verbose=self.verbose)
             samples_clusters = kminstance.predict(samples)
             
             self.clusters_params[clss] = dict()
